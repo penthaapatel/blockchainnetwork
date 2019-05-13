@@ -3,19 +3,20 @@ package blockchainnetwork
 import (
 	"crypto/sha256"
 	"encoding/hex"
+	"encoding/json"
 	"time"
 )
 
 type Block struct {
-	Index     int
-	Data      string
-	Timestamp string
-	PrevHash  string
-	Hash      string
+	Index     int    `json:"index"`
+	Data      string `json:"data"`
+	Timestamp string `json:"timestamp"`
+	PrevHash  string `json:"prevhash"`
+	Hash      string `json:"hash"`
 }
 
 var GenesisBlock = Block{
-	Index:     1,
+	Index:     0,
 	Data:      "genesisblock",
 	Timestamp: time.Now().String(),
 	PrevHash:  "",
@@ -71,4 +72,12 @@ func GenerateChain(newBlocks []Block) {
 	if len(newBlocks) > len(Blockchain) {
 		Blockchain = newBlocks
 	}
+}
+
+func OutputJSON(b Block) (string, error) {
+	jsonOutput, err := json.MarshalIndent(b, "", "   ")
+	if err != nil {
+		return "", err
+	}
+	return string(jsonOutput), nil
 }

@@ -6,8 +6,6 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/davecgh/go-spew/spew"
-
 	b "github.com/penthaapatel/blockchainnetwork/blocks"
 )
 
@@ -52,8 +50,12 @@ func handleConnection(c net.Conn) {
 		newData := scanner.Text()
 		newBlock := b.GenerateBlock(b.Blockchain[len(b.Blockchain)-1], newData)
 		if b.CheckBlock(b.Blockchain[len(b.Blockchain)-1], newBlock) {
-			fmt.Println("New block created")
-			spew.Dump(newBlock)
+			fmt.Println("NEW BLOCK CREATED")
+			output, err := b.OutputJSON(newBlock)
+			if err != nil {
+				fmt.Println("Failed to render json output")
+			}
+			fmt.Println(output)
 			newBlockchain := append(b.Blockchain, newBlock)
 			b.GenerateChain(newBlockchain)
 		}

@@ -7,6 +7,7 @@ import (
 	"time"
 )
 
+//Block A simplified version of a block
 type Block struct {
 	Index     int    `json:"index"`
 	Data      string `json:"data"`
@@ -15,6 +16,7 @@ type Block struct {
 	Hash      string `json:"hash"`
 }
 
+//GenesisBlock First block of the blockchain
 var GenesisBlock = Block{
 	Index:     0,
 	Data:      "genesisblock",
@@ -23,9 +25,10 @@ var GenesisBlock = Block{
 	Hash:      "",
 }
 
+//Blockchain An array of blocks
 var Blockchain []Block
 
-//Uses SHA256 algorithm to generate hash value of a Block.
+//GenerateHash Uses SHA256 algorithm to generate hash value of a Block.
 func GenerateHash(b Block) (hashValue string) {
 	val := string(b.Index) + b.Data + b.Timestamp + b.PrevHash
 	h := sha256.New()
@@ -34,7 +37,7 @@ func GenerateHash(b Block) (hashValue string) {
 	return hashValue
 }
 
-//Generate a new Block.
+//GenerateBlock Generate a new Block.
 func GenerateBlock(oldBlock Block, newData string) Block {
 	newBlock := Block{
 		Index:     oldBlock.Index + 1,
@@ -48,7 +51,7 @@ func GenerateBlock(oldBlock Block, newData string) Block {
 	return newBlock
 }
 
-//Check if the new Block generated is valid.
+//CheckBlock Check if the new Block generated is valid.
 func CheckBlock(oldBlock, newBlock Block) bool {
 	if newBlock.PrevHash != oldBlock.Hash {
 		return false
@@ -66,7 +69,7 @@ func CheckBlock(oldBlock, newBlock Block) bool {
 
 }
 
-//Chaining the Blocks
+//GenerateChain Chaining the Blocks
 func GenerateChain(newBlocks []Block) {
 
 	if len(newBlocks) > len(Blockchain) {
@@ -74,6 +77,7 @@ func GenerateChain(newBlocks []Block) {
 	}
 }
 
+//OutputJSON Pretty print the blocks
 func OutputJSON(b Block) (string, error) {
 	jsonOutput, err := json.MarshalIndent(b, "", "   ")
 	if err != nil {
